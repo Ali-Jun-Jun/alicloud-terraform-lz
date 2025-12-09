@@ -16,7 +16,7 @@ module "vpc" {
   environment = "prod"
   vpc_cidr    = "10.2.0.0/16"
   subnet_cidr = "10.2.1.0/24"
-  zone        = "cn-beijing-a"
+  zone        = "cn-beijing-e"
 }
 
 module "ram_role" {
@@ -28,9 +28,9 @@ module "ecs" {
   source = "../../modules/ecs"
 
   environment         = "prod"
-  image_id            = "ubuntu_20_04_x64_20G_alibase_20230717.vhd"
-  instance_type       = "ecs.g6.large"
+  image_id            = "ubuntu_22_04_x64_20G_alibase_20251103.vhd"
+  instance_type       = "ecs.e-c1m1.large"
   security_group_id   = module.vpc.security_group_id
   vswitch_id          = module.vpc.vswitch_id
-  key_name            = "prod-key"  # ← 替换为你在阿里云创建的密钥对名称
+  key_name            = "llj"  # ← 替换为你在阿里云创建的密钥对名称
 }
