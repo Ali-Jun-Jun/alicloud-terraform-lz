@@ -9,24 +9,26 @@ resource "alicloud_vswitch" "this" {
   zone_id      = var.zone
   vpc_id       = alicloud_vpc.this.id
 }
-
 resource "alicloud_security_group" "this" {
-  name   = "${var.environment}-sg"
+  name   = "web-sg"
   vpc_id = alicloud_vpc.this.id
+}
 
-  security_group_rule {
-    type        = "ingress"
-    ip_protocol = "tcp"
-    port_range  = "22/22"
-    cidr_ip     = "0.0.0.0/0"
-    policy      = "accept"
-  }
+resource "alicloud_security_group_rule" "allow_http" {
+  type              = "ingress"
+  ip_protocol       = "tcp"
+  port_range        = "80/80"
+  cidr_ip           = "0.0.0.0/0"
+  security_group_id = alicloud_security_group.this.id
+  policy            = "accept"
+  priority          = 1
+}
 
-  security_group_rule {
-    type        = "ingress"
-    ip_protocol = "tcp"
-    port_range  = "80/80"
-    cidr_ip     = "0.0.0.0/0"
-    policy      = "accept"
-  }
+resource "alicloud_security_group_rule" "allow_all_egress" {
+  type              = "egress"
+  ip_protocol       = "all"
+  port_range        = "-1/-1"
+  cidr_ip           = "0.0.0.0/0"
+  security_group_id = alicloud_security_group.this.id
+  policy            = "accept"
 }
