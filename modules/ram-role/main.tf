@@ -1,19 +1,18 @@
 resource "alicloud_ram_role" "this" {
-  role_name   = "${var.environment}-ecs-role"
-  document    = <<EOF
-{
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Effect": "Allow",
-      "Principal": {
-        "Service": ["ecs.aliyuncs.com"]
+  name                    = "example-role"
+  assume_role_policy_document = jsonencode({
+    Statement = [
+      {
+        Action    = "sts:AssumeRole"
+        Effect    = "Allow"
+        Principal = {
+          Service = ["ecs.aliyuncs.com"]
+        }
       }
-    }
-  ],
-  "Version": "1"
+    ]
+    Version = "1"
+  })
 }
-EOF
   description = "ECS 实例扮演的角色"
   force       = true
 }
